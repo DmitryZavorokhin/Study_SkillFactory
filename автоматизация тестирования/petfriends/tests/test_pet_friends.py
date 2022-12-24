@@ -2,11 +2,24 @@ import os
 import json
 from petfriends.api import PetFriends
 from petfriends.settings import valid_email,valid_password,incorrect_email,incorrect_password,too_big_auth_key, incorrect_filter
+import pytest
+import requests
+import datetime
 from requests_toolbelt.multipart.encoder import MultipartEncoder
+@pytest.fixture()
+def get_key(request):
+    # переменные email и password нужно заменить своими учетными данными
+    response = requests.post(url='https://petfriends.skillfactory.ru/login',
+                             data={"email": 'dmz8@mail.ru', "pass": '123'})
+    assert response.status_code == 200, 'Запрос выполнен неуспешно'
+    assert 'Cookie' in response.request.headers, 'В запросе не передан ключ авторизации'
+    print("\nreturn auth_key")
+    return response.request.headers.get('Cookie')
 
 """код ниже - полностью скопирован от преподавателя для дальнейшего изучения"""
 
 pf = PetFriends()
+
 
 
 def test_get_api_key_for_valid_user(email=valid_email, password=valid_password):
@@ -20,15 +33,16 @@ def test_get_api_key_for_valid_user(email=valid_email, password=valid_password):
     assert 'key' in result
 
 
-def test_get_all_pets_with_valid_key(filter=''):
+def test_get_all_pets_with_valid_key(get_key):
     """ Проверяем что запрос всех питомцев возвращает не пустой список.
     Для этого сначала получаем api ключ и сохраняем в переменную auth_key. Далее используя этого ключ
     запрашиваем список всех питомцев и проверяем что список не пустой.
     Доступное значение параметра filter - 'my_pets' либо '' """
-
-    _, auth_key = pf.get_api_key(valid_email, valid_password)
+    filter = 'my_pets'
+    auth_key = get_key()
+    # _, auth_key = pf.get_api_key(valid_email, valid_password)
     status, result = pf.get_list_of_pets(auth_key, filter)
-
+    print(result)
     assert status == 200
     assert len(result['pets']) > 0
 
