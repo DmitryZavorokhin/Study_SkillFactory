@@ -91,26 +91,46 @@ class TestPetfriendsHomework:
     def test_same_pets(self):
         self.login()
         self.driver.implicitly_wait(2)
-        set_pets = set()
+        set_pets = {}
         val_i =[]
         val_j = []
         num_tags = self.driver.find_elements(By.TAG_NAME, "tr")
+        # for i in range(1, len(num_tags)):
+        #
+        #     # val_j.append(list(val_i))
+        #     # print("Вторым шагом добавляем значение {} в список {}".format(val_i, val_j))
+        #     val_i.clear()
+        #
+        #     for j in range(1, 4):
+        #
+        #         my_str = '//*[@id="all_my_pets"]/table[1]/tbody[1]/tr[{}]/td[{}]'.format(i, j)
+        #         info = self.driver.find_element(By.XPATH, my_str).text
+        #         val_i.append(info)
+        #
+        #
+        #         # print("добавляем значение {} в список {}". format(info,val_i))
+        # # val_j.append(list(val_i)) # добавляет последнее значение из таблицы питомцев
         for i in range(1, len(num_tags)):
-
-            val_j.append(list(val_i))
-            # print("Вторым шагом добавляем значение {} в список {}".format(val_i, val_j))
+            print(val_i)
+            set_pets[i] = val_i
             val_i.clear()
-            for j in range(1, 4):
+            print(set_pets)
 
+            for j in range(1,4):
                 my_str = '//*[@id="all_my_pets"]/table[1]/tbody[1]/tr[{}]/td[{}]'.format(i, j)
                 info = self.driver.find_element(By.XPATH, my_str).text
                 val_i.append(info)
-                # print("добавляем значение {} в список {}". format(info,val_i))
-        val_j.append(list(val_i))
 
-        for i in range(len(val_j)):
-            set_pets.add(val_j[i])
-            print(val_j, set_pets)
+
+
+
+
+
+        print(set_pets)
+
+        # for i in range(1, len(val_j)):
+        #     set_pets.update(i = val_i)
+        # print(len(val_j),set_pets, val_j, val_i)
 
 
 
